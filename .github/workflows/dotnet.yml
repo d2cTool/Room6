@@ -27,4 +27,4 @@ jobs:
     - name: Test
       run: dotnet test --no-build --verbosity normal
     - name: Publish
-      run: dotnet publish -c Release -o /var/www/room6-prod
+      run: dotnet publish -c Release -o /var/www/room6
