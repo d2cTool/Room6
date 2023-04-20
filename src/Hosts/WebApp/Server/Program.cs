@@ -1,9 +1,20 @@
 using Microsoft.AspNetCore.ResponseCompression;
+using NLog;
+using NLog.Web;
+
+//AD
+var logger = NLog.Web.NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
+logger.Debug("init main");
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+//А.Д. Следующий код переопределяет набор по умолчанию поставщиков ведения журнала
+builder.Logging.ClearProviders();
+builder.Host.UseNLog();
 
+
+// Add services to the container.
+logger.Info("Add services to the container");
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 
