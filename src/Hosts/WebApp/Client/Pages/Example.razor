@@ -1,0 +1,28 @@
+﻿@page "/example"
+
+@using WebApp.Shared
+@using System.Text;
+@using System.Text.Json;
+@using System.Text.Json.Serialization;
+
+@inject HttpClient Http
+
+<h2>Example</h2>
+
+<EditForm Model="@formModel" OnSubmit="@HandleSubmitAsync">
+    <InputText id="text" @bind-Value="formModel.Input" />
+    <button type="submit">Send</button>
+</EditForm>
+
+
+@code {
+
+    FormModel formModel = new FormModel();
+
+    public async Task HandleSubmitAsync()
+    {
+        var response = await Http.PostAsJsonAsync($"Example", formModel);
+        var result = await response.Content.ReadAsStringAsync();
+        Console.WriteLine(result);
+    }
+}
