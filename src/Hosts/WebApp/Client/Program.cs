@@ -11,4 +11,11 @@ builder.Services.AddHttpClient("WebApp.ServerAPI", client => client.BaseAddress 
 // Supply HttpClient instances that include access tokens when making requests to the server project
 builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("WebApp.ServerAPI"));
 
+builder.Services.AddOidcAuthentication(options =>
+{
+    // Configure your authentication provider options here.
+    // For more information, see https://aka.ms/blazor-standalone-auth
+    builder.Configuration.Bind("Local", options.ProviderOptions);
+});
+
 await builder.Build().RunAsync();
