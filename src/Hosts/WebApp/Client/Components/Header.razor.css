@@ -1,0 +1,65 @@
+﻿.header {
+    padding: 18px 70px;
+    max-width: 1280px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.header__logo {
+    width: 38px;
+    height: 38px;
+    background: center / contain no-repeat url(images/room6.svg);
+}
+
+    .header__logo:hover {
+        opacity: .7;
+    }
+
+    .header__logo:active {
+        transform: scale(.9);
+    }
+
+.header__auth-items {
+    display: flex;
+    align-items: center;
+    column-gap: 30px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.header__auth-item {
+    color: #E8E8E8;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 16px;
+}
+
+    .header__auth-item:hover {
+        opacity: .7;
+    }
+
+@media screen and (max-width: 768px) {
+    .header {
+        padding: 18px 30px;
+    }
+}
+
+@media screen and (max-width: 450px) {
+    .header {
+        padding: 18px 14px;
+    }
+
+    .header__auth-items {
+        column-gap: 14px;
+    }
+
+    .header__auth-item {
+        font-size: 10px;
+        line-height: 16px;
+    }
+}

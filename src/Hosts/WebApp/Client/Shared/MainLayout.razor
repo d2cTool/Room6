@@ -1,0 +1,26 @@
+﻿@inherits LayoutComponentBase
+
+<div class="page">
+    <Header />
+
+    <AuthorizeView>
+        <Authorized>
+            <strong>Hello, @context?.User?.Identity?.Name!</strong>
+        </Authorized>
+        <NotAuthorized>
+            <Landing />
+        </NotAuthorized>
+    </AuthorizeView>
+
+    @*<main>
+    <div class="top-row px-4 auth">
+    <LoginDisplay />
+    <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
+    </div>
+
+    <article class="content px-4">
+    @Body
+    </article>
+    </main>*@
+    <Footer />
+</div>
