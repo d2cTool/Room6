@@ -1,36 +1,118 @@
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.ResponseCompression;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
-using WebApp.Server.Data;
-using WebApp.Server.Models;
+using Microsoft.IdentityModel.Logging;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseNpgsql(connectionString));
-builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+var services = builder.Services;
+var configuration = builder.Configuration;
+var env = builder.Environment;
 
-builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddEntityFrameworkStores<ApplicationDbContext>();
+builder.Services.AddDbContext<DbContext>(options =>
+{
+    options.UseInMemoryDatabase("db");
+    options.UseOpenIddict();
+});
 
-builder.Services.AddIdentityServer()
-    .AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
+services.AddAntiforgery(options =>
+{
+    //options.HeaderName = AntiforgeryDefaults.HeaderName;
+    //options.Cookie.Name = AntiforgeryDefaults.CookieName;
+    options.Cookie.SameSite = Microsoft.AspNetCore.Http.SameSiteMode.Strict;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+});
 
-builder.Services.AddAuthentication()
-    .AddIdentityServerJwt();
+services.AddHttpClient();
+services.AddOptions();
 
-builder.Services.AddControllersWithViews();
+services.AddAuthentication(options =>
+{
+    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = "UNKNOWN";
+})
+.AddCookie()
+.AddOpenIdConnect("T1", options =>
+{
+    configuration.GetSection("OpenIDConnectSettingsT1").Bind(options);
+
+    options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.CallbackPath = "/signin-oidc-t1";
+    options.SignedOutCallbackPath = "/signout-callback-oidc-t1";
+    options.ResponseType = OpenIdConnectResponseType.Code;
+    options.SaveTokens = true;
+    options.Scope.Add("profile");
+    options.GetClaimsFromUserInfoEndpoint = true;
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        NameClaimType = "name",
+        RoleClaimType = "role"
+    };
+})
+.AddOpenIdConnect("T2", options =>
+{
+    configuration.GetSection("OpenIDConnectSettingsT2").Bind(options);
+
+    options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.ResponseType = OpenIdConnectResponseType.Code;
+    options.CallbackPath = "/signin-oidc-t2";
+    options.SignedOutCallbackPath = "/signout-callback-oidc-t2";
+    options.SaveTokens = true;
+    options.Scope.Add("profile");
+    options.GetClaimsFromUserInfoEndpoint = true;
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        NameClaimType = "name",
+        RoleClaimType = "role"
+    };
+});
+
+
+
+
+
 builder.Services.AddRazorPages();
+
+builder.Services.AddAuthentication(opt =>
+{
+    opt.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    opt.DefaultChallengeScheme = "UNKNOWN";
+});
+
+builder.Services.AddOpenIddict()
+    .AddCore(options =>
+    {
+        options.UseEntityFrameworkCore()
+               .UseDbContext<DbContext>();
+    })
+    .AddClient(options =>
+    {
+        options.AllowAuthorizationCodeFlow();
+
+        options.AddDevelopmentEncryptionCertificate()
+               .AddDevelopmentSigningCertificate();
+
+        options.UseAspNetCore()
+               .EnableRedirectionEndpointPassthrough();
+
+        options.UseWebProviders()
+               .UseGitHub(options =>
+               {
+                   options.SetClientId("[your client identifier]")
+                          .SetClientSecret("[your client secret]")
+                          .SetRedirectUri("callback/login/github");
+               });
+    });
+
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseMigrationsEndPoint();
     app.UseWebAssemblyDebugging();
+    IdentityModelEventSource.ShowPII = true;
 }
 else
 {
@@ -42,13 +124,12 @@ else
 app.UseHttpsRedirection();
 
 app.UseBlazorFrameworkFiles();
-app.UseStaticFiles();
+app.UseStaticFiles(new StaticFileOptions() { ServeUnknownFileTypes = true });
 
 app.UseRouting();
 
-app.UseIdentityServer();
+app.UseAuthentication();
 app.UseAuthorization();
-
 
 app.MapRazorPages();
 app.MapControllers();

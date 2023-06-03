@@ -19,11 +19,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.Repositories
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services.Repositories.Abstractions", "Services\Services.Repositories.Abstractions\Services.Repositories.Abstractions.csproj", "{1D237097-76E8-4860-86EA-B26CBC09A49E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApp.Server", "Hosts\WebApp\Server\WebApp.Server.csproj", "{D2695C59-561F-4D91-AB56-F311EBF33837}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApp.Server", "Hosts\WebApp\Server\WebApp.Server.csproj", "{D2695C59-561F-4D91-AB56-F311EBF33837}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApp.Client", "Hosts\WebApp\Client\WebApp.Client.csproj", "{EAE55157-E700-4B91-B602-59334B561043}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApp.Client", "Hosts\WebApp\Client\WebApp.Client.csproj", "{EAE55157-E700-4B91-B602-59334B561043}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApp.Shared", "Hosts\WebApp\Shared\WebApp.Shared.csproj", "{21360E35-DD9D-4C65-94FB-6497D4624B18}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApp.Shared", "Hosts\WebApp\Shared\WebApp.Shared.csproj", "{21360E35-DD9D-4C65-94FB-6497D4624B18}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
