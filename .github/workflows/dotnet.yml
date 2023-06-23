@@ -30,8 +30,8 @@ jobs:
       with:
         files: '${{env.DOTNET_ROOT}}\room6\appsettings.json'
       env:
-        GitHub.ClientId: ${{ GH_ClientId }}
-        GitHub.ClientSecret: ${{ GH_ClientSecret }}
+        GitHub.ClientId: ${{ GH_CLIENTID }}
+        GitHub.ClientSecret: ${{ GH_CLIENTSECRET }}
     - name: Restore dependencies
       working-directory: ./src
       run: dotnet restore
