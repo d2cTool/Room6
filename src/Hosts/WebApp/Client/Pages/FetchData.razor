@@ -1,5 +1,6 @@
 ﻿@page "/fetchdata"
-@using WebApp.Shared
+
+@attribute [Authorize]
 @inject HttpClient Http
 
 <PageTitle>Weather forecast</PageTitle>
@@ -42,6 +43,13 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("WeatherForecast");
+        try
+        {
+            forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("WeatherForecast");
+        }
+        catch (AccessTokenNotAvailableException exception)
+        {
+            exception.Redirect();
+        }
     }
 }

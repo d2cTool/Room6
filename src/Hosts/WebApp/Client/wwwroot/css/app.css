@@ -1,29 +1,22 @@
-@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
+@import url(../vendor/normalize.css);
+@import url(../vendor/fonts/fonts.css);
 
-html, body {
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-}
 
-h1:focus {
-    outline: none;
-}
-
-a, .btn-link {
-    color: #0071c1;
-}
-
-.btn-primary {
-    color: #fff;
-    background-color: #1b6ec2;
-    border-color: #1861ac;
-}
-
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-.content {
-    padding-top: 1.1rem;
+.body {
+    margin: 0 auto;
+    max-width: 1280px;
+    min-width: 320px;
+    box-sizing: border-box;
+    background-color: #000000;
+    overflow: auto;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+    -moz-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+    font-family: 'Inter', sans-serif;
 }
 
 .valid.modified:not([type=checkbox]) {

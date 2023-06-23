@@ -4,16 +4,21 @@
     <TargetFramework>net7.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>WebApp.Server-9e87d496-f7b0-4be2-8d70-3f3815ce9fcc</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="7.0.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="7.0.7" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="7.0.7" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Common" Version="7.0.7" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="7.0.7" />
+    <PackageReference Include="NetEscapades.AspNetCore.SecurityHeaders" Version="0.19.0" />
+    <PackageReference Include="Serilog.AspNetCore" Version="7.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Client\WebApp.Client.csproj" />
     <ProjectReference Include="..\Shared\WebApp.Shared.csproj" />
   </ItemGroup>
-
 
 </Project>

@@ -1,5 +1,7 @@
 ﻿@page "/counter"
 
+@attribute [Authorize(Roles = "TENANT")]
+
 <PageTitle>Counter</PageTitle>
 
 <h1>Counter</h1>

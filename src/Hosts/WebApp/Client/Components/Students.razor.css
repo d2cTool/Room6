@@ -1,0 +1,171 @@
+﻿.about-student {
+    margin: 0 70px;
+}
+
+.about-student__content {
+    margin: 0 auto;
+    padding: 110px 0 100px 0;
+}
+
+.about-student__title {
+    font-style: normal;
+    font-weight: 400;
+    font-size: 22px;
+    line-height: 27px;
+    letter-spacing: -0.04em;
+    color: #E8E8E8;
+    margin: 0;
+    padding-bottom: 23px;
+    border-bottom: 1px solid #000;
+}
+
+.about-student__student-link {
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 17px;
+    color: #A0A0A0;
+    text-decoration: none;
+}
+
+    .about-student__student-link:hover {
+        opacity: .7;
+    }
+
+.about-student__student {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-top: 66px;
+    column-gap: 49px;
+}
+
+.about-student__student-text {
+    max-width: 660px;
+}
+
+.about-student__student-name {
+    font-style: normal;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 28px;
+    letter-spacing: -0.04em;
+    color: #E8E8E8;
+    margin: 0 0 8px 0;
+}
+
+.about-student__student-work {
+    font-style: normal;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 20px;
+    color: #A0A0A0;
+    mix-blend-mode: normal;
+    margin: 0 0 8px 0;
+}
+
+.about-student__student-info {
+    margin: 0 0 40px 0;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 22px;
+    color: #E8E8E8;
+    mix-blend-mode: normal
+}
+
+.about-student__student-image {
+    height: 200px;
+    border-radius: 10px;
+    object-fit: cover;
+    object-position: center;
+}
+
+@media screen and (max-width: 768px) {
+    .about-student {
+        margin: 0 50px;
+    }
+
+    .about-student__content {
+        padding: 90px 0;
+    }
+
+    .about-student__student-name {
+        font-size: 40px;
+        line-height: 40px;
+        margin-bottom: 16px;
+    }
+
+    .about-student__student-work {
+        font-size: 12px;
+        line-height: 18px;
+        margin-bottom: 20px;
+    }
+
+    .about-student__student-info {
+        margin-bottom: 87px;
+        font-size: 12px;
+        line-height: 18px;
+    }
+
+    .about-student__student-image {
+        width: 255px;
+        height: 307px;
+    }
+}
+
+@media screen and (max-width: 630px) {
+    .about-student__student {
+        flex-direction: column;
+    }
+
+    .about-student__student-image {
+        order: -1;
+        align-self: center;
+        margin-bottom: 40px;
+    }
+
+    .about-student__student-name {
+        margin-bottom: 20px;
+    }
+
+    .about-student__student-info {
+        margin-bottom: 40px;
+    }
+}
+
+@media screen and (max-width: 450px) {
+    .about-student {
+        margin: 0 14px;
+    }
+
+    .about-student__content {
+        padding: 70px 0;
+    }
+
+    .about-student__title {
+        font-size: 18px;
+        line-height: 22px;
+        padding-bottom: 28px;
+    }
+
+    .about-student__student-name {
+        font-size: 30px;
+        line-height: 36px;
+    }
+
+    .about-student__student-work {
+        font-size: 11px;
+        line-height: 16px;
+    }
+
+    .about-student__student-info {
+        font-size: 11px;
+        line-height: 16px;
+    }
+
+    .about-student__student-image {
+        width: 100%;
+        height: 352px;
+    }
+}

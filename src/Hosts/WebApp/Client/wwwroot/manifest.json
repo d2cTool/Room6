@@ -1,6 +1,6 @@
 {
-  "name": "WebApp",
-  "short_name": "WebApp",
+  "name": "Room6",
+  "short_name": "Room6",
   "start_url": "./",
   "display": "standalone",
   "background_color": "#ffffff",
