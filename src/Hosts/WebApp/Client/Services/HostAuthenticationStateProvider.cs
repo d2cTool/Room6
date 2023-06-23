@@ -1,17 +1,15 @@
-﻿using System.Net.Http.Json;
+﻿using Microsoft.AspNetCore.Components;
+using System.Net.Http.Json;
 using System.Security.Claims;
-using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using WebApp.Shared.Authorization;
+using WebApp.Shared.Defaults;
 
 namespace WebApp.Client.Services
 {
     public class HostAuthenticationStateProvider : AuthenticationStateProvider
     {
         private static readonly TimeSpan _userCacheRefreshInterval = TimeSpan.FromSeconds(60);
-
-        private const string LogInPath = "api/Account/Login";
-        private const string LogOutPath = "api/Account/Logout";
 
         private readonly NavigationManager _navigation;
         private readonly HttpClient _client;
@@ -34,7 +32,7 @@ namespace WebApp.Client.Services
         {
             var returnUrl = customReturnUrl != null ? _navigation.ToAbsoluteUri(customReturnUrl).ToString() : null;
             var encodedReturnUrl = Uri.EscapeDataString(returnUrl ?? _navigation.Uri);
-            var logInUrl = _navigation.ToAbsoluteUri($"{LogInPath}?returnUrl={encodedReturnUrl}");
+            var logInUrl = _navigation.ToAbsoluteUri($"{AuthDefaults.LogInPath}?returnUrl={encodedReturnUrl}");
             _navigation.NavigateTo(logInUrl.ToString(), true);
         }
 
@@ -61,7 +59,7 @@ namespace WebApp.Client.Services
             try
             {
                 _logger.LogInformation("{clientBaseAddress}", _client.BaseAddress?.ToString());
-                user = await _client.GetFromJsonAsync<UserInfo>("api/User");
+                user = await _client.GetFromJsonAsync<UserInfo>("info");
             }
             catch (Exception exc)
             {

@@ -12,10 +12,12 @@
             <nav class="header__auth">
                 <ul class="header__auth-items">
                     <li>
-                        <a class="header__auth-item" href="authentication/profile">@context.User.Identity?.Name</a>
+                        <span class="header__auth-item">@context.User.Identity?.Name</span>
+                        @*<a class="header__auth-item" href="authentication/profile">@context.User.Identity?.Name</a>*@
                     </li>
                     <li>
-                        <button class="header__auth-item" @onclick="BeginLogOut">Выйти</button>
+                        @*<button class="header__auth-item" @onclick="BeginLogOut">Выйти</button>*@
+                        <a class="header__auth-item" href="/logout">Выйти</a>
                     </li>
                 </ul>
             </nav>
@@ -24,10 +26,7 @@
             <nav class="header__auth">
                 <ul class="header__auth-items">
                     <li>
-                        <a class="header__auth-item" href="authentication/register">Регистрация</a>
-                    </li>
-                    <li>
-                        <a class="header__auth-item" href="authentication/login">Войти</a>
+                        <a class="header__auth-item" href="/login">Войти</a>
                     </li>
                 </ul>
             </nav>

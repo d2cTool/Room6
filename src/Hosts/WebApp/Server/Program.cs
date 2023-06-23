@@ -1,138 +1,119 @@
+using System.Net.Http.Headers;
+using System.Security.Claims;
+using System.Text.Json;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Logging;
-using Microsoft.IdentityModel.Protocols.OpenIdConnect;
-using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Authentication.OAuth;
+using Microsoft.AspNetCore.ResponseCompression;
+using Serilog;
+using Serilog.Events;
+using Serilog.Sinks.SystemConsole.Themes;
+using WebApp.Server.Hubs;
+
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.Console()
+    .CreateBootstrapLogger();
+
+Log.Information("Starting up");
 
 var builder = WebApplication.CreateBuilder(args);
-
 var services = builder.Services;
 var configuration = builder.Configuration;
 var env = builder.Environment;
 
-builder.Services.AddDbContext<DbContext>(options =>
-{
-    options.UseInMemoryDatabase("db");
-    options.UseOpenIddict();
-});
-
-services.AddAntiforgery(options =>
-{
-    //options.HeaderName = AntiforgeryDefaults.HeaderName;
-    //options.Cookie.Name = AntiforgeryDefaults.CookieName;
-    options.Cookie.SameSite = Microsoft.AspNetCore.Http.SameSiteMode.Strict;
-    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-});
+builder.Host.UseSerilog((ctx, lc) => lc
+    .MinimumLevel.Information()
+    .MinimumLevel.Override("IdentityModel", LogEventLevel.Debug)
+    .Enrich.FromLogContext()
+    .WriteTo.Console(
+        outputTemplate:
+        "[{Timestamp:HH:mm:ss} {Level}] {SourceContext}{NewLine}{Message:lj}{NewLine}{Exception}{NewLine}",
+        theme: AnsiConsoleTheme.Code));
 
 services.AddHttpClient();
 services.AddOptions();
 
+services.AddResponseCompression(opts =>
+{
+    opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
+          new[] { "application/octet-stream" });
+});
+
 services.AddAuthentication(options =>
 {
-    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = "UNKNOWN";
+    options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = "github";
 })
-.AddCookie()
-.AddOpenIdConnect("T1", options =>
+.AddCookie()//, opt => { opt.LoginPath = "~/login"; opt.LogoutPath = "~/logout"; })
+.AddOAuth("github", options =>
 {
-    configuration.GetSection("OpenIDConnectSettingsT1").Bind(options);
+    options.AuthorizationEndpoint = "https://github.com/login/oauth/authorize";
+    options.TokenEndpoint = "https://github.com/login/oauth/access_token";
+    options.UserInformationEndpoint = "https://api.github.com/user";
 
-    options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-    options.CallbackPath = "/signin-oidc-t1";
-    options.SignedOutCallbackPath = "/signout-callback-oidc-t1";
-    options.ResponseType = OpenIdConnectResponseType.Code;
-    options.SaveTokens = true;
-    options.Scope.Add("profile");
-    options.GetClaimsFromUserInfoEndpoint = true;
-    options.TokenValidationParameters = new TokenValidationParameters
-    {
-        NameClaimType = "name",
-        RoleClaimType = "role"
-    };
-})
-.AddOpenIdConnect("T2", options =>
-{
-    configuration.GetSection("OpenIDConnectSettingsT2").Bind(options);
+    options.ClientId = configuration["GitHub:ClientId"];
+    options.ClientSecret = configuration["GitHub:ClientSecret"];
+    options.CallbackPath = new PathString("/github-oauth");
 
-    options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-    options.ResponseType = OpenIdConnectResponseType.Code;
-    options.CallbackPath = "/signin-oidc-t2";
-    options.SignedOutCallbackPath = "/signout-callback-oidc-t2";
+    options.Scope.Add("user:email");
+
     options.SaveTokens = true;
-    options.Scope.Add("profile");
-    options.GetClaimsFromUserInfoEndpoint = true;
-    options.TokenValidationParameters = new TokenValidationParameters
+
+    options.ClaimActions.MapJsonKey(ClaimTypes.NameIdentifier, "id");
+    options.ClaimActions.MapJsonKey(ClaimTypes.Name, "name");
+    options.ClaimActions.MapJsonKey("urn:github:login", "login");
+    options.ClaimActions.MapJsonKey("urn:github:url", "html_url");
+    options.ClaimActions.MapJsonKey("urn:github:avatar", "avatar_url");
+
+    options.Events = new OAuthEvents
     {
-        NameClaimType = "name",
-        RoleClaimType = "role"
+        OnCreatingTicket = async context =>
+        {
+            var request = new HttpRequestMessage(HttpMethod.Get, context.Options.UserInformationEndpoint);
+            request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            request.Headers.Add("X-OAuth-Scopes", "user");
+            request.Headers.Add("X-Accepted-OAuth-Scopes", "user");
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", context.AccessToken);
+
+            var response = await context.Backchannel.SendAsync(request);
+            response.EnsureSuccessStatusCode();
+
+            var user = await response.Content.ReadFromJsonAsync<JsonElement>();
+            context.RunClaimActions(user);
+        }
     };
 });
 
-
-
-
-
-builder.Services.AddRazorPages();
-
-builder.Services.AddAuthentication(opt =>
-{
-    opt.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-    opt.DefaultChallengeScheme = "UNKNOWN";
-});
-
-builder.Services.AddOpenIddict()
-    .AddCore(options =>
-    {
-        options.UseEntityFrameworkCore()
-               .UseDbContext<DbContext>();
-    })
-    .AddClient(options =>
-    {
-        options.AllowAuthorizationCodeFlow();
-
-        options.AddDevelopmentEncryptionCertificate()
-               .AddDevelopmentSigningCertificate();
-
-        options.UseAspNetCore()
-               .EnableRedirectionEndpointPassthrough();
-
-        options.UseWebProviders()
-               .UseGitHub(options =>
-               {
-                   options.SetClientId("[your client identifier]")
-                          .SetClientSecret("[your client secret]")
-                          .SetRedirectUri("callback/login/github");
-               });
-    });
-
+services.AddRazorPages();
+services.AddSignalR();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+if (env.IsDevelopment())
 {
+    app.UseDeveloperExceptionPage();
     app.UseWebAssemblyDebugging();
-    IdentityModelEventSource.ShowPII = true;
 }
 else
 {
     app.UseExceptionHandler("/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
 }
 
+app.UseResponseCompression();
 app.UseHttpsRedirection();
-
 app.UseBlazorFrameworkFiles();
-app.UseStaticFiles(new StaticFileOptions() { ServeUnknownFileTypes = true });
+app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseCookiePolicy();
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapRazorPages();
 app.MapControllers();
+app.MapHub<ChatHub>("hubs/chat");
 app.MapFallbackToFile("index.html");
 
 app.Run();
