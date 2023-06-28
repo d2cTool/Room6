@@ -18,7 +18,7 @@ namespace WebApp.Client.Components
 
         private void BeginLogOut()
         {
-            Navigation.NavigateToLogout("authentication/logout");
+            Navigation.NavigateToLogout("/logout");
         }
 
         private void ToggleNavMenu()
