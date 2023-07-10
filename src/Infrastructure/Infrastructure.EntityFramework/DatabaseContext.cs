@@ -9,13 +9,16 @@ namespace Infrastructure.EntityFramework
 
         public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options)
         {
-            ChangeTracker.AutoDetectChangesEnabled = false;
         }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
+            modelBuilder.Entity<Noun>()
+                .HasKey(n => n.Id);
+            modelBuilder.Entity<Noun>()
+                .Property(n => n.Name)
+                .IsRequired();
         }
     }
 }

@@ -2,8 +2,8 @@
 {
     public class Noun
     {
-        public long Id { get; set; }
+        public required long Id { get; init; }
 
-        public string Name { get; set; } = null!;
+        public required string Name { get; init; } = null!;
     }
 }
