@@ -15,8 +15,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{BC
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.EntityFramework", "Infrastructure\Infrastructure.EntityFramework\Infrastructure.EntityFramework.csproj", "{A06DCF61-FEE0-4387-84FB-BE3547D3B048}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.Repositories.Implementations", "Infrastructure\Infrastructure.Repositories.Implementations\Infrastructure.Repositories.Implementations.csproj", "{A55BC505-9806-41EE-A5EA-2E48B3F05375}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services.Repositories.Abstractions", "Services\Services.Repositories.Abstractions\Services.Repositories.Abstractions.csproj", "{1D237097-76E8-4860-86EA-B26CBC09A49E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApp.Server", "Hosts\WebApp\Server\WebApp.Server.csproj", "{F1805590-4547-488C-AAAA-51B2D033EA41}"
@@ -39,10 +37,6 @@ Global
 		{A06DCF61-FEE0-4387-84FB-BE3547D3B048}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A06DCF61-FEE0-4387-84FB-BE3547D3B048}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A06DCF61-FEE0-4387-84FB-BE3547D3B048}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A55BC505-9806-41EE-A5EA-2E48B3F05375}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A55BC505-9806-41EE-A5EA-2E48B3F05375}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A55BC505-9806-41EE-A5EA-2E48B3F05375}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A55BC505-9806-41EE-A5EA-2E48B3F05375}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1D237097-76E8-4860-86EA-B26CBC09A49E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1D237097-76E8-4860-86EA-B26CBC09A49E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1D237097-76E8-4860-86EA-B26CBC09A49E}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -66,7 +60,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{C0B92E89-C101-4627-86CD-07083F37973D} = {A575D44A-0621-422C-8B47-6A6EB21B3B2F}
 		{A06DCF61-FEE0-4387-84FB-BE3547D3B048} = {7FD17975-787F-497D-94B9-36DF7418F63E}
-		{A55BC505-9806-41EE-A5EA-2E48B3F05375} = {7FD17975-787F-497D-94B9-36DF7418F63E}
 		{1D237097-76E8-4860-86EA-B26CBC09A49E} = {BCA35298-6838-4B0D-A04B-3A787E99C03D}
 		{F1805590-4547-488C-AAAA-51B2D033EA41} = {0CABCF93-5BF1-40B4-B13B-C2AE5F9C4677}
 		{79A0B944-CE3D-46F6-BEAD-E92EA33ADC7B} = {0CABCF93-5BF1-40B4-B13B-C2AE5F9C4677}

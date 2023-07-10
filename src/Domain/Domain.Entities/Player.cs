@@ -1,7 +1,9 @@
 ﻿namespace Domain.Entities
 {
-    public class Player : Entity<long>
+    public class Player
     {
-        public string UserName { get; set; } = default!;
+        public required long Id { get; init; }
+
+        public required string UserName { get; set; } = default!;
     }
 }

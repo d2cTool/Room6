@@ -5,8 +5,7 @@ namespace Infrastructure.EntityFramework
 {
     public static class EntityFrameworkInstaller
     {
-        public static IServiceCollection ConfigureContext(this IServiceCollection services,
-            string connectionString)
+        public static IServiceCollection ConfigureContext(this IServiceCollection services, string connectionString)
         {
             services
                 .AddDbContext<DatabaseContext>(o => o

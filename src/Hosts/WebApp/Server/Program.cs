@@ -1,10 +1,12 @@
 using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Text.Json;
+using Infrastructure.EntityFramework;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.AspNetCore.ResponseCompression;
+using Microsoft.EntityFrameworkCore;
 using Serilog;
 using Serilog.Events;
 using Serilog.Sinks.SystemConsole.Themes;
@@ -87,6 +89,9 @@ services.AddAuthentication(options =>
 
 services.AddRazorPages();
 services.AddSignalR();
+
+services.AddDbContextFactory<DatabaseContext>(opt => opt.UseNpgsql(configuration.GetConnectionString("Db")));
+services.AddSingleton<GameRepository>();
 
 var app = builder.Build();
 
