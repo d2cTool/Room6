@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Infrastructure\Infrastructure.EntityFramework\Infrastructure.EntityFramework.csproj" />
     <ProjectReference Include="..\Client\WebApp.Client.csproj" />
     <ProjectReference Include="..\Shared\WebApp.Shared.csproj" />
   </ItemGroup>

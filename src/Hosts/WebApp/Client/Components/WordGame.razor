@@ -1,0 +1,35 @@
+﻿@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@inject NavigationManager Navigation
+
+
+<header class="header">
+
+    <a class="header__logo" href="" title="На главную" />
+
+    <AuthorizeView>
+        <Authorized>
+            <nav class="header__auth">
+                <ul class="header__auth-items">
+                    <li>
+                        <span class="header__auth-item">@context.User.Identity?.Name</span>
+                        @*<a class="header__auth-item" href="authentication/profile">@context.User.Identity?.Name</a>*@
+                    </li>
+                    <li>
+                        @*<button class="header__auth-item" @onclick="BeginLogOut">Выйти</button>*@
+                        <a class="header__auth-item" href="/logout">Выйти</a>
+                    </li>
+                </ul>
+            </nav>
+        </Authorized>
+        <NotAuthorized>
+            <nav class="header__auth">
+                <ul class="header__auth-items">
+                    <li>
+                        <a class="header__auth-item" href="/login">Войти</a>
+                    </li>
+                </ul>
+            </nav>
+        </NotAuthorized>
+    </AuthorizeView>
+</header>
