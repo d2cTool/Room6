@@ -19,6 +19,8 @@
         <PackageReference Include="Npgsql" Version="7.0.4" />
         <PackageReference Include="Npgsql.DependencyInjection" Version="7.0.4" />
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.4" />
+        <PackageReference Include="RabbitMQ.Client" Version="6.5.0" />
+        <PackageReference Include="RabbitMQ.Client.Core.DependencyInjection" Version="5.0.0" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
     </ItemGroup>
 
@@ -30,6 +32,11 @@
     <ItemGroup>
       <Compile Remove="WeatherForecast.cs" />
       <Compile Remove="Controllers\WeatherForecastController.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Services.MQ\Services.MQ.csproj" />
+      <ProjectReference Include="..\Services.PlayerRating.Interfaces\Services.PlayerRating.Interfaces.csproj" />
     </ItemGroup>
 
 </Project>

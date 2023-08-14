@@ -1,6 +1,6 @@
 namespace Services.PlayerRating.Models.BLL;
 
-public class PlayerRatingItem
+public class PlayerRatingItem : IPlayerRatingItem
 {
     public int Rank { get; set; }
 

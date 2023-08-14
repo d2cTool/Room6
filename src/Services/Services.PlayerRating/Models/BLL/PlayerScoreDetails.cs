@@ -1,6 +1,6 @@
 namespace Services.PlayerRating.Models.BLL;
 
-public class PlayerScoreDetails
+public class PlayerScoreDetails : IPlayerScoreDetails
 {
     public Guid  GameID { get; set; }
     

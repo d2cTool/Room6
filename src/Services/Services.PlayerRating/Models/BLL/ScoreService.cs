@@ -24,7 +24,7 @@ public class ScoreService : IScoreService
         _playersRepository = playersRepository;
     }
 
-    public async Task<ScoreDetails> AddScoreAsync(ScoreDetails details, CancellationToken token =default)
+    public async Task<IScoreDetails> AddScoreAsync(IScoreDetails details, CancellationToken token =default)
     {
         var score = _mapper.Map<Scores>(details);
         _scoreRepository.Insert(score);
@@ -33,7 +33,7 @@ public class ScoreService : IScoreService
         return details;
     }
 
-    public async Task<GameDetails> AddGameAsync(GameDetails details, CancellationToken token)
+    public async Task<IGameDetails> AddGameAsync(IGameDetails details, CancellationToken token)
     {
         var game = _mapper.Map<Games>(details);
         _gamesRepository.Insert(game);
@@ -42,7 +42,7 @@ public class ScoreService : IScoreService
         return details;
     }
 
-    public async Task<PlayerDetails> AddPlayerDetailsAsync(PlayerDetails playerDetails, CancellationToken token)
+    public async Task<IPlayerDetails> AddPlayerDetailsAsync(IPlayerDetails playerDetails, CancellationToken token)
     {
         var player = _mapper.Map<Players>(playerDetails);
         _playersRepository.Insert(player);
@@ -52,7 +52,7 @@ public class ScoreService : IScoreService
     }
 
 
-    public async Task<PlayerScoreDetails> GetScoresAsync(Guid gameID, Guid playerID, CancellationToken token)
+    public async Task<IPlayerScoreDetails> GetScoresAsync(Guid gameID, Guid playerID, CancellationToken token)
     {
         var scores = await _scoreRepository.Query().Where(x => x.GameID == gameID && x.PlayerID == playerID)
             .ProjectTo<PlayerScoreDetails>(_mapper.ConfigurationProvider)
@@ -60,18 +60,18 @@ public class ScoreService : IScoreService
         return scores;
     }
 
-    public async Task<PlayerDetails[]> GetPlayersAsync(CancellationToken token)
+    public async Task<IPlayerDetails[]> GetPlayersAsync(CancellationToken token)
     {
         return await _playersRepository.Query().ProjectTo<PlayerDetails>(_mapper.ConfigurationProvider).ToArrayAsync(token);
     }
 
-    public async Task<GameDetails[]> GetGamesAsync(CancellationToken token)
+    public async Task<IGameDetails[]> GetGamesAsync(CancellationToken token)
     {
         return await _gamesRepository.Query().ProjectTo<GameDetails>(_mapper.ConfigurationProvider).ToArrayAsync(token);
 
     }
 
-    public async Task<PlayerRatingDetails?> GetPlayerRank(Guid gameID, CancellationToken token)
+    public async Task<IPlayerRatingDetails?> GetPlayerRank(Guid gameID, CancellationToken token)
     {
         var scores =  await _scoreRepository.Query().Where(x => x.GameID == gameID)
             .ProjectTo<PlayerRatingItem>(_mapper.ConfigurationProvider)
