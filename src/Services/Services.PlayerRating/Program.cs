@@ -1,37 +1,53 @@
 using System.Reflection;
-using System.Runtime.CompilerServices;
+using MassTransit;
 using Microsoft.EntityFrameworkCore;
-using RabbitMQ.Client.Core.DependencyInjection;
-using RabbitMQ.Client.Core.DependencyInjection.Configuration;
 using Services.PlayerRating.BLL;
 using Services.PlayerRating.Models.BLL;
 using Services.PlayerRating.Models.DAL;
 using Services.PlayerRating.Models.Presentation;
+using Services.PlayerRating.Models.Presentation.Rabbit;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+var serviceCollection = builder.Services;
+
+serviceCollection.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-builder.Services.AddHostedService<QueryListenerService>();
-var defaultDbType = "Postgres";
-var dbType = builder.Configuration.GetSection("DbType")?.Value ?? defaultDbType;
-//if (dbType?.ToLower() == defaultDbType)
+serviceCollection.AddEndpointsApiExplorer();
+serviceCollection.AddSwaggerGen();
+var configuration = builder.Configuration;
+
+serviceCollection.AddMassTransit(x =>
 {
-    var connectionString = builder.Configuration.GetConnectionString("Db");
-    builder.Services.AddDbContext<PgContext>(x=>x.UseNpgsql(connectionString));
-}
+    x.AddBus(x=>Bus.Factory.CreateUsingRabbitMq(sbc =>
+    {
+        sbc.Host(new Uri(configuration["rmqAddress"]), h =>
+        {
+            h.Username(configuration["rmqLogin"]);
+            h.Password(configuration["rmqPassword"]);
+        });
+    
+    }));
+    x.AddConsumer<ScoreModelConsumer>();
+});
+serviceCollection.AddScoped<ScoreModelConsumer>();
 
-builder.Services.AddScoped<IScoreService, ScoreService>();
-builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-builder.Services.AddScoped<DbContext, PgContext>();
+var connectionString = configuration.GetConnectionString("Db");
+serviceCollection.AddDbContext<PgContext>(x=>x.UseNpgsql(connectionString));
 
-builder.Services.AddAutoMapper(x=>x.AddMaps(Assembly.GetExecutingAssembly()));
+
+serviceCollection.AddScoped<IScoreService, ScoreService>();
+serviceCollection.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+serviceCollection.AddScoped<IUnitOfWork, UnitOfWork>();
+serviceCollection.AddScoped<DbContext, PgContext>();
+serviceCollection.AddScoped<IRabbitMQRepository, RabbitMqRepository>();
+
+serviceCollection.AddAutoMapper(x=>x.AddMaps(Assembly.GetExecutingAssembly()));
 var app = builder.Build();
+
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

@@ -4,6 +4,8 @@ using Services.PlayerRating.Models.DAL;
 
 namespace Services.PlayerRating.Models;
 
+//run dotnet ef database update -- {connection string}
+
 public class PgContextDesignFactory : IDesignTimeDbContextFactory<PgContext>
 {
     public PgContext CreateDbContext(string[] args)
